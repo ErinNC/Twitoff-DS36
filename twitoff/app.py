@@ -7,10 +7,12 @@ from os import getenv
 
 
 def create_app():
-    '''The main app function for twitoff.
-    Brings everything together.'''
+    '''The main app function for Twitoff Post Predictor: 
+    To predict which of two users is most likely to post
+    a hypothetical tweet. 
+    Brings all .py, .html files, and database together.'''
 
-    # Initialize our app
+    # Initialize our Flask app
     app  = Flask(__name__)
 
     # Database configuration- tells our app where to find DB
@@ -20,7 +22,7 @@ def create_app():
 
     DB.init_app(app)
 
-    app_title = 'Twitoff DS36'
+    app_title = 'Twitoff Post Predictor'
 
     # Create a new "route" that detects when a user accesses it
     # We'll attach each route to our "app" object
@@ -33,10 +35,11 @@ def create_app():
                                 title='Home',
                                 users=users)
 
+
     @app.route('/reset')
     def reset():
         '''Drop existing DB tables and create new ones'''
-        # Drop our DB tables
+        # Drop our DB user and tweet tables
         DB.drop_all()
         # Create tables according to the classes in models.py
         # Like executing an SQL query
@@ -44,16 +47,21 @@ def create_app():
         return render_template('base.html',
                                 title='Reset Database')
 
+
     @app.route('/update')
     def update():
-        '''Updates all users'''
+        '''Updates tweets for all users'''
         usernames = [user.username for user in User.query.all()]
         for username in usernames:
             add_or_update_user(username)
         return render_template('base.html',
                                 title='Update Users')
+
+                            
     # Response to submitting a user
     @app.route('/user', methods=['POST'])
+
+
     # Response to visiting /user/username
     @app.route('/user/<username>', methods=['GET'])
     def user(username=None, message=''):
@@ -75,6 +83,7 @@ def create_app():
                                 tweets=tweets,
                                 message=message)
                 
+
     @app.route('/compare', methods= ['POST'])
     def compare():
         user0 = request.values['user0']
@@ -85,7 +94,7 @@ def create_app():
         else:
             text = request.values['tweet_text']
             prediction = predict_user(user0, user1, request.values['tweet_text'])
-            message = '{} is more likely to be said by {} than {}!'.format(
+            message = '"{}" is more likely to be said by {} than {}!'.format(
                 text,
                 user1 if prediction else user0,
                 
@@ -93,6 +102,7 @@ def create_app():
         return render_template('prediction.html',
                                 title = 'Prediction',
                                 message = message)
+
 
     # Return our app object after attaching routes to it
     return app

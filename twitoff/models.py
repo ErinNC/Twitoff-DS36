@@ -7,31 +7,31 @@ DB = SQLAlchemy()
 
 
 class User(DB.Model):
-    """Creates a User table with SQLAlchemy"""
-    # id column
+    """Creates a User table with SQLAlchemy and defines schema"""
+    # User id column
     id = DB.Column(DB.BigInteger, primary_key=True)
-    # name column
+    # User name column
     username = DB.Column(DB.String, nullable=False)
-    # tweets column comes from DB.backref- working behind the scenes
-    # newest tweet id
+    # Tweets column comes from DB.backref- working behind the scenes
+    # Newest tweet id
     newest_tweet_id = DB.Column(DB.BigInteger)
 
     def __repr__(self):
         return f"User: {self.username}"
 
 class Tweet(DB.Model):
-    """Keeps track of tweets for each user"""
-    # id column
+    """Keeps track of previously posted tweets for each user"""
+    # User id column
     id = DB.Column(DB.BigInteger, primary_key=True)
-    # text column
+    # Tweet text column
     text = DB.Column(DB.Unicode(300)) # allows for text and links
-    # user_id column
+    # User_id column
     user_id = DB.Column(DB.BigInteger, DB.ForeignKey(
         'user.id'), nullable=False)
-    # user
-    # Going to add an attribute to both tables (User and Tweet)
+
+    # Adds an attribute to both tables (User and Tweet)
     user = DB.relationship('User', backref=DB.backref('tweets', lazy=True))
-    # place to store our word embeddings "vectorization"
+    # Create a place to store our word embeddings (vectorization)
     vect = DB.Column(DB.PickleType, nullable=False)
 
     def __repr__(self):
