@@ -7,7 +7,7 @@ The Twitoff Post Predictor app allows the user to select Twitter accounts, accep
 ## What the User Does
 - Enter two (or more) twitter usernames.
 - Select the usernames of the accounts that they would like to compare
-- Enter some text that we would like to make a prediction with. We want to predict which user is more likely to have tweeted that text.
+- Enter some text that they would like to make a prediction with. 
 - Click the "Compare Users" button to generate a prediction.
 
 ## What the App Does
